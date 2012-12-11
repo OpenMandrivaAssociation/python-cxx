@@ -72,3 +72,10 @@ chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
 %dir %{_datadir}/python*
 %{_includedir}/python*/CXX
 %{_datadir}/python*/CXX
+
+
+%changelog
+* Fri Jan 27 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 6.2.3-1
++ Revision: 769355
+- imported package python-cxx
+
