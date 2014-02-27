@@ -12,7 +12,6 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
-
 Name:           python-cxx
 Version:        6.2.3
 Release:        1
@@ -23,7 +22,7 @@ Group:          Development/Python
 Source0:        pycxx-%{version}.tar.gz
 Patch0:         %{name}-%{version}-change-include-paths.patch
 Patch1:         %{name}-%{version}-fix-indentation.patch
-%py_requires -d
+BuildRequires:  python-devel
 BuildArch:      noarch
 
 %description
