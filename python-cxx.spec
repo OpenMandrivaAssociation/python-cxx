@@ -12,11 +12,13 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
+
 Name:           python-cxx
 Version:        6.2.3
 Release:        1
 License:        BSD
 Summary:        Write Python extensions in C++
+
 Url:            http://CXX.sourceforge.net/
 Group:          Development/Python
 Source0:        pycxx-%{version}.tar.gz
@@ -33,6 +35,7 @@ extension modules in C++.
 
 %package devel
 Summary:        Python-cxx Header files
+
 Group:          Development/Python
 Requires:       %{name} = %{version}
 Requires:       python-devel
@@ -61,20 +64,11 @@ chmod -x %{buildroot}/%{_datadir}/python*/CXX/*.*
 chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
 
 %files
-%defattr(-,root,root)
 %doc README.html COPYRIGHT
-%{python_sitelib}/*
+%{py_puresitedir}/*
 
 %files devel
-%defattr(-,root,root)
 %doc Doc/Python2/
 %dir %{_datadir}/python*
 %{_includedir}/python*/CXX
 %{_datadir}/python*/CXX
-
-
-%changelog
-* Fri Jan 27 2012 Dmitry Mikhirev <dmikhirev@mandriva.org> 6.2.3-1
-+ Revision: 769355
-- imported package python-cxx
-
