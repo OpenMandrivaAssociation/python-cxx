@@ -15,7 +15,7 @@
 
 Name:           python-cxx
 Version:        6.2.3
-Release:        3
+Release:        4
 License:        BSD
 Summary:        Write Python extensions in C++
 
@@ -45,8 +45,9 @@ Header files and documentation for python-cxx development.
 
 %prep
 %setup -q -n pycxx-%{version}
-%patch0 -p1
-%patch1 -p1
+%apply_patches
+
+2to3 -w Lib/__init__.py
 
 %build
 python setup.py build
@@ -55,11 +56,11 @@ python setup.py build
 PYTHONDONTWRITEBYTECODE= python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
 install CXX/*.hxx %{buildroot}/%{_includedir}/*/CXX
 install CXX/*.h %{buildroot}/%{_includedir}/*/CXX/
-cp -R CXX/Python2 %{buildroot}/%{_includedir}/*/CXX/
+cp -R CXX/Python3 %{buildroot}/%{_includedir}/*/CXX/
 #dh_link -ppython-cxx-dev /usr/include/$${i}/CXX/ /usr/include/$${i}_d/CXX; \
 install Src/*.c %{buildroot}/%{_datadir}/*/CXX/
 install Src/*.cxx %{buildroot}/%{_datadir}/*/CXX/
-cp -R Src/Python2 %{buildroot}/%{_datadir}/*/CXX/
+cp -R Src/Python3 %{buildroot}/%{_datadir}/*/CXX/
 chmod -x %{buildroot}/%{_datadir}/python*/CXX/*.*
 chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
 
@@ -68,7 +69,7 @@ chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
 %{py_puresitedir}/*
 
 %files devel
-%doc Doc/Python2/
+%doc Doc/Python3/
 %dir %{_datadir}/python*
 %{_includedir}/python*/CXX
 %{_datadir}/python*/CXX
