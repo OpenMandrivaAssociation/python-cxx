@@ -14,16 +14,16 @@
 
 
 Name:           python-cxx
-Version:        6.2.3
-Release:        4
+Version:        6.2.5
+Release:        1
 License:        BSD
 Summary:        Write Python extensions in C++
 
 Url:            http://CXX.sourceforge.net/
 Group:          Development/Python
 Source0:        pycxx-%{version}.tar.gz
-Patch0:         %{name}-%{version}-change-include-paths.patch
-Patch1:         %{name}-%{version}-fix-indentation.patch
+Patch0:         %{name}-6.2.3-change-include-paths.patch
+#Patch1:         %{name}-6.2.3-fix-indentation.patch
 BuildRequires:  python-devel
 BuildArch:      noarch
 
