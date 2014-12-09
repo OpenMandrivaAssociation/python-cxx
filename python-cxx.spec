@@ -15,7 +15,7 @@
 
 Name:           python-cxx
 Version:        6.2.5
-Release:        2
+Release:        3
 License:        BSD
 Summary:        Write Python extensions in C++
 
@@ -33,36 +33,74 @@ language. The first part encapsulates the Python C API taking care of
 exceptions and ref counting. The second part supports the building of Python
 extension modules in C++.
 
+%package -n python2-cxx
+Summary: Write Python 2.x extensions in C++
+Group: Development/Python
+BuildRequires: python2-devel
+
+%description -n python2-cxx
+PyCXX is a set of classes to help create extensions of Python in the C
+language. The first part encapsulates the Python C API taking care of
+exceptions and ref counting. The second part supports the building of Python
+extension modules in C++.
+
 %package devel
 Summary:        Python-cxx Header files
-
 Group:          Development/Python
-Requires:       %{name} = %{version}
+Requires:       %{name} = %{EVRD}
 Requires:       python-devel
 
 %description devel
 Header files and documentation for python-cxx development.
 
+%package -n python2-cxx-devel
+Summary:        Python2-cxx Header files
+Group:          Development/Python
+Requires:       python2-cxx = %{EVRD}
+Requires:       python2-devel
+
+%description -n python2-cxx-devel
+Header files and documentation for python2-cxx development.
+
 %prep
 %setup -q -n pycxx-%{version}
 %apply_patches
+
+mkdir -p PY2
+cp -a `ls |grep -v PY2` PY2/
 
 2to3 -w Lib/__init__.py
 
 %build
 python setup.py build
 
+cd PY2
+python2 setup.py build
+
 %install
-PYTHONDONTWRITEBYTECODE= python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
-install CXX/*.hxx %{buildroot}/%{_includedir}/*/CXX
-install CXX/*.h %{buildroot}/%{_includedir}/*/CXX/
-cp -R CXX/Python3 %{buildroot}/%{_includedir}/*/CXX/
+cd PY2
+PYTHONDONTWRITEBYTECODE=true python2 setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+install CXX/*.hxx %{buildroot}/%{_includedir}/python2*/CXX
+install CXX/*.h %{buildroot}/%{_includedir}/python2*/CXX/
+cp -R CXX/Python2 %{buildroot}/%{_includedir}/python2*/CXX/
 #dh_link -ppython-cxx-dev /usr/include/$${i}/CXX/ /usr/include/$${i}_d/CXX; \
-install Src/*.c %{buildroot}/%{_datadir}/*/CXX/
-install Src/*.cxx %{buildroot}/%{_datadir}/*/CXX/
-cp -R Src/Python3 %{buildroot}/%{_datadir}/*/CXX/
-chmod -x %{buildroot}/%{_datadir}/python*/CXX/*.*
-chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
+install Src/*.c %{buildroot}/%{_datadir}/python2*/CXX/
+install Src/*.cxx %{buildroot}/%{_datadir}/python2*/CXX/
+cp -R Src/Python2 %{buildroot}/%{_datadir}/python2*/CXX/
+chmod -x %{buildroot}/%{_datadir}/python2*/CXX/*.*
+chmod -x %{buildroot}/%{_includedir}/python2*/CXX/*.*
+cd ..
+
+PYTHONDONTWRITEBYTECODE=true python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+install CXX/*.hxx %{buildroot}/%{_includedir}/python3*/CXX
+install CXX/*.h %{buildroot}/%{_includedir}/python3*/CXX/
+cp -R CXX/Python3 %{buildroot}/%{_includedir}/python3*/CXX/
+#dh_link -ppython-cxx-dev /usr/include/$${i}/CXX/ /usr/include/$${i}_d/CXX; \
+install Src/*.c %{buildroot}/%{_datadir}/python3*/CXX/
+install Src/*.cxx %{buildroot}/%{_datadir}/python3*/CXX/
+cp -R Src/Python3 %{buildroot}/%{_datadir}/python3*/CXX/
+chmod -x %{buildroot}/%{_datadir}/python3*/CXX/*.*
+chmod -x %{buildroot}/%{_includedir}/python3*/CXX/*.*
 
 %files
 %doc README.html COPYRIGHT
@@ -70,6 +108,16 @@ chmod -x %{buildroot}/%{_includedir}/python*/CXX/*.*
 
 %files devel
 %doc Doc/Python3/
-%dir %{_datadir}/python*
-%{_includedir}/python*/CXX
-%{_datadir}/python*/CXX
+%dir %{_datadir}/python3*
+%{_includedir}/python3*/CXX
+%{_datadir}/python3*/CXX
+
+%files -n python2-cxx
+%doc README.html COPYRIGHT
+%{py2_puresitedir}/*
+
+%files -n python2-cxx-devel
+%doc Doc/Python2/
+%dir %{_datadir}/python2*
+%{_includedir}/python2*/CXX
+%{_datadir}/python2*/CXX
