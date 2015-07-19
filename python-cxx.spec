@@ -15,7 +15,7 @@
 
 Name:           python-cxx
 Version:        6.2.5
-Release:        3
+Release:        4
 License:        BSD
 Summary:        Write Python extensions in C++
 
