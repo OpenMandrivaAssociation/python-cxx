@@ -1,4 +1,2 @@
-removed_sources:
-  pycxx-6.2.3.tar.gz: 12245dd18e3bd1d5dc4190d01eba6dd31ff39c07
 sources:
-  pycxx-6.2.5.tar.gz: b57e4cc99270fc70c96534b09379b48349017b73
+  pycxx-6.2.8.tar.gz: a5c09691848a7e7c75eb1ddffa9ad2c539453607
