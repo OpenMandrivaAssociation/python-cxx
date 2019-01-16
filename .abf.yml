@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   pycxx-7.0.2.tar.gz: 6830df63d20ccaca61ae8aa8a7106d860f38e61c
+sources:
+  pycxx-7.1.0.tar.gz: 79280486cbdc8900fe9b12ba37c1e35091908141

@@ -14,14 +14,14 @@
 
 
 Name:           python-cxx
-Version:        7.0.2
-Release:        3
+Version:        7.1.0
+Release:        1
 License:        BSD
 Summary:        Write Python extensions in C++
 
 Url:            http://CXX.sourceforge.net/
 Group:          Development/Python
-Source0:	http://downloads.sourceforge.net/project/cxx/CXX/PyCXX%20V%{version}/pycxx-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/cxx/pycxx-%{version}.tar.gz
 Patch0:         %{name}-6.2.3-change-include-paths.patch
 BuildRequires:  python-devel
 BuildArch:      noarch
@@ -71,7 +71,7 @@ cp -a `ls |grep -v PY2` PY2/
 2to3 -w Lib/__init__.py
 
 %build
-python setup.py build
+%py_build
 
 cd PY2
 python2 setup.py build
@@ -90,7 +90,7 @@ chmod -x %{buildroot}/%{_datadir}/python2*/CXX/*.*
 chmod -x %{buildroot}/%{_includedir}/python2*/CXX/*.*
 cd ..
 
-PYTHONDONTWRITEBYTECODE=true python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+PYTHONDONTWRITEBYTECODE=true %py_install --prefix="%{_prefix}"
 install CXX/*.hxx %{buildroot}/%{_includedir}/python3*/CXX
 install CXX/*.h %{buildroot}/%{_includedir}/python3*/CXX/
 cp -R CXX/Python3 %{buildroot}/%{_includedir}/python3*/CXX/
