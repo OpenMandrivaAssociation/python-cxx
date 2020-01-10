@@ -63,7 +63,7 @@ Header files and documentation for python2-cxx development.
 
 %prep
 %setup -q -n pycxx-%{version}
-%apply_patches
+%autopatch -p1
 
 mkdir -p PY2
 cp -a `ls |grep -v PY2` PY2/
