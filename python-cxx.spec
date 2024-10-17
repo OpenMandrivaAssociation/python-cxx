@@ -19,7 +19,7 @@ Release:        5
 License:        BSD
 Summary:        Write Python extensions in C++
 
-Url:            http://CXX.sourceforge.net/
+Url:            https://CXX.sourceforge.net/
 Group:          Development/Python
 Source0:	http://downloads.sourceforge.net/project/cxx/CXX/PyCXX%20V%{version}/pycxx-%{version}.tar.gz
 Patch0:         %{name}-6.2.3-change-include-paths.patch
