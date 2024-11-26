@@ -12,18 +12,23 @@
 # license that conforms to the Open Source Definition (Version 1.9)
 # published by the Open Source Initiative.
 
+%global module pycxx
 
-Name:           python-cxx
-Version:        7.0.2
-Release:        5
-License:        BSD
+%bcond python2	0
+
 Summary:        Write Python extensions in C++
-
-Url:            https://CXX.sourceforge.net/
+Name:           python-cxx
+Version:        7.1.8
+Release:        1
+License:        BSD
 Group:          Development/Python
-Source0:	http://downloads.sourceforge.net/project/cxx/CXX/PyCXX%20V%{version}/pycxx-%{version}.tar.gz
+Url:            https://CXX.sourceforge.net/
+Source0:        http://downloads.sourceforge.net/cxx/%{module}-%{version}.tar.gz
 Patch0:         %{name}-6.2.3-change-include-paths.patch
-BuildRequires:  python-devel
+BuildRequires:	pkgconfig(python3)
+BuildRequires:	python%{pyver}dist(pip)
+BuildRequires:	python%{pyver}dist(setuptools)
+
 BuildArch:      noarch
 
 %description
@@ -32,6 +37,32 @@ language. The first part encapsulates the Python C API taking care of
 exceptions and ref counting. The second part supports the building of Python
 extension modules in C++.
 
+%files
+%license COPYRIGHT
+%doc README.html
+%{py_puresitedir}/*
+
+
+#-----------------------------------------------------------------------
+
+%package devel
+Summary:        Python-cxx Header files
+Group:          Development/Python
+Requires:       %{name} = %{EVRD}
+Requires:       python-devel
+
+%description devel
+Header files and documentation for python-cxx development.
+
+%files devel
+%doc Doc/Python3/
+%dir %{_datadir}/python3*
+%{_includedir}/python3*/CXX
+%{_datadir}/python3*/CXX
+
+#-----------------------------------------------------------------------
+
+%if %{with python2}
 %package -n python2-cxx
 Summary: Write Python 2.x extensions in C++
 Group: Development/Python
@@ -43,15 +74,15 @@ language. The first part encapsulates the Python C API taking care of
 exceptions and ref counting. The second part supports the building of Python
 extension modules in C++.
 
-%package devel
-Summary:        Python-cxx Header files
-Group:          Development/Python
-Requires:       %{name} = %{EVRD}
-Requires:       python-devel
+%files -n python2-cxx
+%license COPYRIGHT
+%doc README.html
+%{py2_puresitedir}/*
+%endif
 
-%description devel
-Header files and documentation for python-cxx development.
+#-----------------------------------------------------------------------
 
+%if %{with python2}
 %package -n python2-cxx-devel
 Summary:        Python2-cxx Header files
 Group:          Development/Python
@@ -61,9 +92,18 @@ Requires:       python2-devel
 %description -n python2-cxx-devel
 Header files and documentation for python2-cxx development.
 
+%files -n python2-cxx-devel
+%doc Doc/Python2/
+%dir %{_datadir}/python2*
+%{_includedir}/python2*/CXX
+%{_datadir}/python2*/CXX
+%endif
+
+#-----------------------------------------------------------------------
+
 %prep
-%setup -q -n pycxx-%{version}
-%autopatch -p1
+%autosetup -p1 -n %{module}-%{version}
+
 
 mkdir -p PY2
 cp -a `ls |grep -v PY2` PY2/
@@ -71,14 +111,20 @@ cp -a `ls |grep -v PY2` PY2/
 2to3 -w Lib/__init__.py
 
 %build
-python setup.py build
+%py_build
 
-cd PY2
-python2 setup.py build
+%if %{with python2}
+pushd PY2
+%py2_build
+#python2 setup.py build
+popd
+%endif
 
 %install
-cd PY2
-PYTHONDONTWRITEBYTECODE=true python2 setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+%if %{with python2}
+pushd PY2
+#PYTHONDONTWRITEBYTECODE=true python2 setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+%py2_install
 install CXX/*.hxx %{buildroot}/%{_includedir}/python2*/CXX
 install CXX/*.h %{buildroot}/%{_includedir}/python2*/CXX/
 cp -R CXX/Python2 %{buildroot}/%{_includedir}/python2*/CXX/
@@ -88,9 +134,11 @@ install Src/*.cxx %{buildroot}/%{_datadir}/python2*/CXX/
 cp -R Src/Python2 %{buildroot}/%{_datadir}/python2*/CXX/
 chmod -x %{buildroot}/%{_datadir}/python2*/CXX/*.*
 chmod -x %{buildroot}/%{_includedir}/python2*/CXX/*.*
-cd ..
+popd
+%endif
 
-PYTHONDONTWRITEBYTECODE=true python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+#PYTHONDONTWRITEBYTECODE=true python setup.py install --root=%{buildroot} --prefix="%{_prefix}"
+%py_install
 install CXX/*.hxx %{buildroot}/%{_includedir}/python3*/CXX
 install CXX/*.h %{buildroot}/%{_includedir}/python3*/CXX/
 cp -R CXX/Python3 %{buildroot}/%{_includedir}/python3*/CXX/
@@ -101,22 +149,3 @@ cp -R Src/Python3 %{buildroot}/%{_datadir}/python3*/CXX/
 chmod -x %{buildroot}/%{_datadir}/python3*/CXX/*.*
 chmod -x %{buildroot}/%{_includedir}/python3*/CXX/*.*
 
-%files
-%doc README.html COPYRIGHT
-%{py_puresitedir}/*
-
-%files devel
-%doc Doc/Python3/
-%dir %{_datadir}/python3*
-%{_includedir}/python3*/CXX
-%{_datadir}/python3*/CXX
-
-%files -n python2-cxx
-%doc README.html COPYRIGHT
-%{py2_puresitedir}/*
-
-%files -n python2-cxx-devel
-%doc Doc/Python2/
-%dir %{_datadir}/python2*
-%{_includedir}/python2*/CXX
-%{_datadir}/python2*/CXX
